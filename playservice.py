@@ -44,3 +44,9 @@ class Service(object):
             pygame.mixer.music.load(file)
             pygame.mixer.music.play()
 
+    def delete_play_list(self,mp3_name):
+        mp3_id = self.helper.getOne('select id from t_mp3 where mp3_name = %s',mp3_name)
+        if mp3_id:
+            self.helper.executeDML('delete from t_play_list WHERE mid = %s AND uid=%s',mp3_id[0],self.uid)
+
+

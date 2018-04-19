@@ -21,11 +21,46 @@ class MainWindow:
         mp3_name = self.t1.get(num)  #根据下标返回mp3名字
         self.service.play_mp3(mp3_name)
 
+    def delete_mp3(self,event):
+        # tkinter.messagebox.showinfo('messagebox','this is button 2 dialog')
+        num = self.t1.curselection() #返回用户选择歌曲的下标
+        mp3_name = self.t1.get(num)  #根据下标返回mp3名字
+        self.service.delete_play_list(mp3_name)
+        #更新列表内容
+        list = self.service.find_play_list_by_user() #查出播放列表
+        #print(list)
+        self.t1.delete(0, END)
+        for i in list:
+            self.t1.insert(END,i[0])
+
     def buttonListener2(self,event):
-        tkinter.messagebox.showinfo('messagebox','this is button 2 dialog')
+        # tkinter.messagebox.showinfo('messagebox','this is button 2 dialog')
+        if not self.pause:
+            pygame.mixer.music.pause()
+            self.pause = 1
+        else:
+            pygame.mixer.music.unpause()
+            self.pause = 0
 
     def buttonListener3(self,event):
-        tkinter.messagebox.showinfo('messagebox','this is button 3 dialog')
+        # tkinter.messagebox.showinfo('messagebox','this is button 3 dialog')
+        pygame.mixer.music.stop()
+
+
+    def sound_up(self,event):
+        # tkinter.messagebox.showinfo('messagebox','this is button 3 dialog')
+        #pygame.mixer.music.stop()
+        volume = pygame.mixer.music.get_volume()
+        if volume <1:
+            volume +=0.1
+        pygame.mixer.music.set_volume(volume)
+
+    def sound_down(self, event):
+        # tkinter.messagebox.showinfo('messagebox','this is button 3 dialog')
+        volume = pygame.mixer.music.get_volume()
+        if volume > 0:
+            volume -=0.1
+        pygame.mixer.music.set_volume(volume)
 
     #点击导入歌曲调用的函数
     def loadMp3(self,event):
@@ -46,6 +81,7 @@ class MainWindow:
 
     def __init__(self,service):
         self.service = service
+        self.pause = 0
         self.frame=Tk()
         self.frame.title('')
         self.button1 = Button(self.frame,text = '播放')
@@ -80,6 +116,9 @@ class MainWindow:
         self.button2.bind('<ButtonRelease-1>',self.buttonListener2)
         self.button3.bind('<ButtonRelease-1>',self.buttonListener3)
         self.button4.bind('<ButtonRelease-1>',self.loadMp3)
+        self.button5.bind('<ButtonRelease-1>',self.delete_mp3)
+        self.button6.bind('<ButtonRelease-1>',self.sound_up)
+        self.button7.bind('<ButtonRelease-1>',self.sound_down)
 
         self.frame.mainloop()
 
