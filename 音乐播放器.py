@@ -17,21 +17,21 @@ class MainWindow:
         # track = pygame.mixer.music.load(r'd:/11.mp3')
         # print(track,type(track))
         # pygame.mixer.music.play()
-        num = self.t1.curselection() #返回用户选择歌曲的下标
-        mp3_name = self.t1.get(num)  #根据下标返回mp3名字
+        num = self.playlist.curselection() #返回用户选择歌曲的下标
+        mp3_name = self.playlist.get(num)  #根据下标返回mp3名字
         self.service.play_mp3(mp3_name)
 
     def delete_mp3(self,event):
         # tkinter.messagebox.showinfo('messagebox','this is button 2 dialog')
-        num = self.t1.curselection() #返回用户选择歌曲的下标
-        mp3_name = self.t1.get(num)  #根据下标返回mp3名字
+        num = self.playlist.curselection() #返回用户选择歌曲的下标
+        mp3_name = self.playlist.get(num)  #根据下标返回mp3名字
         self.service.delete_play_list(mp3_name)
         #更新列表内容
         list = self.service.find_play_list_by_user() #查出播放列表
         #print(list)
-        self.t1.delete(0, END)
+        self.playlist.delete(0, END)
         for i in list:
-            self.t1.insert(END,i[0])
+            self.playlist.insert(END,i[0])
 
     def buttonListener2(self,event):
         # tkinter.messagebox.showinfo('messagebox','this is button 2 dialog')
@@ -69,21 +69,21 @@ class MainWindow:
         self.service.load_mp3(files) #插入到数据库中
         list = self.service.find_play_list_by_user() #查出播放列表
         #print(list)
-        self.t1.delete(0, END)
+        self.playlist.delete(0, END)
         for i in list:
-            self.t1.insert(END,i[0])
+            self.playlist.insert(END,i[0])
 
     def select_text(self,event):
         # tkinter.messagebox.showinfo('messagebox','this is')
-        # item = self.t1.curselection()
-        # print(self.t1.get(item))
+        # item = self.playlist.curselection()
+        # print(self.playlist.get(item))
         pass
 
     def __init__(self,service):
         self.service = service
         self.pause = 0
         self.frame=Tk()
-        self.frame.title('')
+        self.frame.title('my player')
         self.button1 = Button(self.frame,text = '播放')
         self.button2 = Button(self.frame,text = '暂停')
         self.button3 = Button(self.frame,text = '停止')
@@ -92,7 +92,7 @@ class MainWindow:
         self.button6 = Button(self.frame,text = '增加音量')
         self.button7 = Button(self.frame,text = '减小音量')
 
-        self.t1 = Listbox(self.frame,{'selectmode':SINGLE}) #播放列表play list
+        self.playlist = Listbox(self.frame,{'selectmode':SINGLE}) #播放列表play list
         self.button1.grid(row=0,column=0,padx=5,pady=5)
         self.button2.grid(row=0,column=1,padx=5,pady=5)
         self.button3.grid(row=0,column=2,padx=5,pady=5)
@@ -101,16 +101,16 @@ class MainWindow:
         self.button6.grid(row=0,column=5,padx=5,pady=5)
         self.button7.grid(row=0,column=6,padx=5,pady=5)
 
-        self.t1.grid(row=1,column=0,padx=5,pady=5,columnspan=6)
+        self.playlist.grid(row=1,column=0,padx=5,pady=5,columnspan=7)
 
         #返回登录用户的播放列表
         list = self.service.find_play_list_by_user()
         #print(list)
-        self.t1.delete(0, END) #清空list
+        self.playlist.delete(0, END) #清空list
         for i in list:
-            self.t1.insert(END,i[0])
+            self.playlist.insert(END,i[0])
 
-        self.t1.bind('<ButtonRelease-1>',self.select_text)
+        self.playlist.bind('<ButtonRelease-1>',self.select_text)
 
         self.button1.bind('<ButtonRelease-1>',self.play)
         self.button2.bind('<ButtonRelease-1>',self.buttonListener2)
