@@ -39,6 +39,8 @@ class Service(object):
     def play_mp3(self,mp3_name):
         file_path = self.helper.getOne('select mp3_file from t_mp3 where mp3_name=%s',mp3_name) #tuple
         if file_path and file_path[0]: #数据库中找到了mp3的路径
-            pygame.mixer.music.load(r'%s'%file_path[0])
+            file = r'%s'%file_path[0]
+            file = file.encode('utf-8')
+            pygame.mixer.music.load(file)
             pygame.mixer.music.play()
 

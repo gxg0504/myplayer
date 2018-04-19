@@ -41,6 +41,19 @@ class MysqlHelper(object):
         try:
             self.connection = pymysql.connect(**MysqlHelper.config)
             self.cursor = self.connection.cursor()
+            num = self.cursor.execute(sql,args)
+            self.connection.commit()
+            return num
+        except Exception as ex:
+            self.connection.rollback()
+            print(ex,ex)
+        finally:
+            self.close()
+
+    def executeDML_insert_id(self,sql,*args):
+        try:
+            self.connection = pymysql.connect(**MysqlHelper.config)
+            self.cursor = self.connection.cursor()
             #num = self.cursor.execute(sql,args)
             new_id = self.connection.insert_id() #返回系统自增生成的新id
             self.connection.commit()
